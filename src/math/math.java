@@ -4,77 +4,81 @@ package math;
 import java.util.Scanner;
 
 public class math {
-
-    public static double value(Flag flag) {
-        double value = 0;
-
+    public static char operationInput() throws Exception {
         Scanner sc = new Scanner(System.in);
-
-        if (sc.hasNextDouble()) {
-            value = sc.nextDouble();
-            flag.flag = 1;
-        } else {
-            System.out.println("Вы ввели не целое число");
+        char result = sc.next().charAt(0);
+        switch (result) {
+            case '/':
+            case '*':
+            case '-':
+            case '+':
+                return result;
         }
-
-        return value;
+        throw new Exception("Unknown operation");
     }
 
-    public static void operation(Flag flag, double firstValue, double secondValue){
-        char operation = ' ';
-
+    public static double valueInput() throws Exception {
         Scanner sc = new Scanner(System.in);
+//        if (!sc.hasNextLine()) {
+//            throw new Exception("Unknown value");
+//        }
+//        return Double.parseDouble(sc.nextLine().replaceAll("[^\\-\\d]", ""));
+        return Double.parseDouble(sc.nextLine().replaceAll("[^-\\d]", ""));
+    }
 
-        operation = sc.next().charAt(0);
-
-        if (operation == '/') {
-            System.out.printf("%.1f %s %.1f = %.1f %n", firstValue,operation, secondValue, firstValue/secondValue);
-            flag.flag = 1;
-        } else if (operation == '*') {
-            System.out.printf("%.1f %s %.1f = %.1f %n", firstValue,operation, secondValue, firstValue*secondValue);
-            flag.flag = 1;
-        } else if (operation == '-') {
-            System.out.printf("%.1f %s %.1f = %.1f %n", firstValue,operation, secondValue, firstValue-secondValue);
-            flag.flag = 1;
-        } else if (operation == '+') {
-            System.out.printf("%.1f %s %.1f = %.1f %n", firstValue,operation, secondValue, firstValue+secondValue);
-            flag.flag = 1;
-        } else {
-            System.out.println("Вы ввели неверную операцию");
+    public static double calc(double a, double b, char c) throws Exception{
+        switch (c) {
+            case '/':
+                if(b==0){
+                    throw new Exception("Error ...");
+                }
+                return a / b;
+            case '*':
+                return a * b;
+            case '-':
+                return a - b;
+            case '+':
+                return a + b;
         }
-
+        throw new Exception("Unknown operation");
     }
-
-    static class Flag{
-        int flag = 0;
-    }
-
 
     public static void main(String[] args) {
-        double firstValue = 0;
-        double secondValue = 0;
-        Flag flag = new Flag();
+        double a, b;
+        char o;
 
-        Scanner sc = new Scanner(System.in);
+        while(true) {
+            try{
+                System.out.print("Введите первое целое число: ");
+                a = valueInput();
+                break;
+            }
+            catch(Exception e){}
+        }
 
-        do {
-            System.out.print("Введите первое целое число: ");
-            firstValue = value(flag);
-        } while (flag.flag == 0);
+        while(true) {
+            try{
+                System.out.print("Введите второе целое число: ");
+                b = valueInput();
+                break;
+            }
+            catch(Exception e){}
+        }
 
-        flag.flag = 0;
-        do {
-            System.out.print("Введите второе целое число: ");
-            secondValue = value(flag);
-        } while (flag.flag == 0);
+        while(true) {
+            try {
+                System.out.print("введите операцию, которую нужно произвести с числами: ");
+                o = operationInput();
+                break;
+            }
+            catch(Exception e){}
+        }
 
-        System.out.println("первое введеное число; " + firstValue + "; второе введеное число: " + secondValue);
-
-        flag.flag = 0;
-        do {
-            System.out.print("введите операцию, которую нужно произвести с числами: ");
-            operation(flag, firstValue, secondValue);
-        } while (flag.flag == 0);
-
+        try {
+            System.out.printf("%.2f %c %.2f = %.2f\n", a, o, b, calc(a, b, o));
+        }
+        catch(Exception e){
+            System.out.printf("%.2f %c %.2f = %s\n", a, o, b, e.getMessage());
+        }
     }
 }
